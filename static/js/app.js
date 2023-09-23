@@ -8,6 +8,32 @@ d3.json(url).then(function(data) {
   console.log(data);
 
 });
+
+
+//Create init function with names to dropdowns
+
+function init() {
+  let dropDown = d3.select("#selDataset");
+  d3.json(url).then((data) => {
+    let names = data.names;
+    names.forEach((id) => {
+    console.log(id);
+    dropDown.append("option").text(id).property("value",id);
+    });
+
+    let firstSample= names[0];
+    console.log(firstSample);
+
+    //Build plots for first sample
+    meta(firstSample);
+    barChart(firstSample);
+    bubbleChart(firstSample);
+  })
+  
+
+};
+
+
 //Build bar chart function
 function barChart(samples) {
     d3.json(url).then(function(data){
@@ -35,7 +61,7 @@ function barChart(samples) {
     })
 
 };
-barChart("941")
+
 
 
 //Build bubble chart function
@@ -69,5 +95,31 @@ function bubbleChart(samples) {
     })
 
 };
-bubbleChart("941")
-//Create init function with names to dropdowns
+
+
+//Create function that looks at metadata
+function meta(demo_data) {
+  d3.json(url).then((data) => {
+    const metadata = data.metadata;
+    const data_array = metadata.filter((samp) => samp.id == demo_data);
+    const result = data_array[0]; 
+    const table = d3.select("#sample-metadata").html("");
+    for (const [key,value] of Object.entries(result)) {
+      table.append("h5").text(`${key}:${value}`);
+    };
+  });
+};
+
+//Function that updates the data for each selection
+function optionChanged(value) {
+
+  console.log(value);
+
+  selection = value;
+  meta(selection);
+  barChart(selection);
+  bubbleChart(selection);
+
+};
+
+init();
