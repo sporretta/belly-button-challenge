@@ -49,12 +49,18 @@ function barChart(samples) {
             y: otu_ids.slice(0,10).reverse(),
             type: "bar",
             orientation:"h",
-            text: otu_labels.slice(0,10).reverse()
+            text: otu_labels.slice(0,10).reverse(),
+            color: otu_ids,
+            colorscale: "YlOrBr"
           }];
         
           let layout = {
-            height: 600,
-            width: 800
+            width: 800,
+            title: "Top 10 Bacteria Cultures",
+            margin: {
+              t: 30, l: 150, r: 10
+            }
+            
           };
         
           Plotly.newPlot("bar", bar, layout);
@@ -71,7 +77,7 @@ function bubbleChart(samples) {
             console.log(samps);
         let sample_id= samps.filter(s=>s.id === samples)[0];
         console.log(sample_id) ;  
-        let otu_ids= Object.values(sample_id.otu_ids).map(id=>`OTU ${id}`);
+        let otu_ids= Object.values(sample_id.otu_ids).map(id=>id);
         let sample_values= Object.values(sample_id.sample_values);
         let otu_labels= Object.values(sample_id.otu_labels); 
         let bubble = [{
@@ -83,12 +89,26 @@ function bubbleChart(samples) {
               color: otu_ids,
               size: sample_values,
               opacity: 0.4
+              
             }
           }];
         
           let layout = {
-            height: 600,
-            width: 800
+            //height: 800,
+            //width: 800,
+            title: "Count of Bacteria Cultures per Sample",
+            xaxis: {
+              title: 'OTU id',
+              showgrid: false,
+              zeroline: false
+            },
+            margin: {
+              t: 25, l:50
+            },
+            yaxis: {
+              title: "Bacteria Cultures Found",
+              showline: false
+            }
           };
         
           Plotly.newPlot("bubble", bubble, layout);
